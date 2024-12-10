@@ -374,10 +374,12 @@
             _UIKitNavigation_onViewAppear.append(work)
           }
         } else if let presented = presentedByID[key] {
-          if let controller = presented.controller {
-            dismiss(controller, transaction)
+          DispatchQueue.main.async {
+            if let controller = presented.controller {
+              dismiss(controller, transaction)
+            }
+            self.presentedByID[key] = nil
           }
-          self.presentedByID[key] = nil
         }
       }
     }
