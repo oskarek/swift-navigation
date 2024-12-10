@@ -386,21 +386,23 @@
             _UIKitNavigation_onViewAppear.append(work)
           }
         } else if let presented = presentedByID[key] {
-          if let controller = presented.controller {
-            var controllerToDismiss: UIViewController? = nil
-            if inFlightController != nil {
-              controllerToDismiss = inFlightController
-              inFlightController = nil
-            } else if controller.presentedViewController != nil {
-              controllerToDismiss = self
-            } else {
-              controllerToDismiss = controller
+          DispatchQueue.main.async {
+            if let controller = presented.controller {
+              var controllerToDismiss: UIViewController? = nil
+              if inFlightController != nil {
+                controllerToDismiss = inFlightController
+                inFlightController = nil
+              } else if controller.presentedViewController != nil {
+                controllerToDismiss = self
+              } else {
+                controllerToDismiss = controller
+              }
+              if let controllerToDismiss {
+                dismiss(controllerToDismiss, transaction)
+              }
             }
-            if let controllerToDismiss {
-              dismiss(controllerToDismiss, transaction)
-            }
+            self.presentedByID[key] = nil
           }
-          self.presentedByID[key] = nil
         }
       }
     }
